@@ -1,0 +1,128 @@
+consumes:
+- application/json
+info:
+  description: For use with the Monta Monta Plan application
+  title: MM Plan API
+  version: 1.0.0
+paths:
+  /v1/plan/:
+    get:
+      operationId: getPlans
+      parameters:
+        - name: limit
+          in: query
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        200:
+          description: List the plans
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/plan"
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      operationId: addPlan
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/plan"
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: "#/definitions/plan"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/plan"
+  /v1/plan/{id}:
+    parameters:
+      - type: integer
+        format: int64
+        name: id
+        in: path
+        required: true
+    get:
+      operationId: getPlanById
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/plan'
+        default:
+          description: error
+          schema:
+            $ref: '#/definitions/plan'
+    put:
+      operationId: updatePlan
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/plan"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/plan"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    delete:
+      operationId: deleteEvent
+      responses:
+        204:
+          description: Deleted
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+produces:
+- application/json
+schemes:
+- http
+swagger: "2.0"
+definitions:
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+  plan:
+    type: object
+    required:
+      - id
+      - isComplete
+    properties:
+      id:
+        type: integer
+        format: int64
+        readOnly: true
+      name1:
+        type: string
+        minLength: 1
+      name2:
+        type: string
+        minLength: 1
+      list1:
+        type: string
+        minLength: 1
+      list2:
+        type: string
+        minLength: 1
+      timestamp:
+        type: string
+      isComplete:
+        type: boolean
