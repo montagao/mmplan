@@ -136,7 +136,7 @@ func init() {
         }
       },
       "delete": {
-        "operationId": "deleteEvent",
+        "operationId": "deletePlan",
         "responses": {
           "204": {
             "description": "Deleted"
@@ -333,7 +333,7 @@ func init() {
         }
       },
       "delete": {
-        "operationId": "deleteEvent",
+        "operationId": "deletePlan",
         "responses": {
           "204": {
             "description": "Deleted"

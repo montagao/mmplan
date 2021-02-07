@@ -40,8 +40,8 @@ func NewMmplanAPI(spec *loads.Document) *MmplanAPI {
 		AddPlanHandler: AddPlanHandlerFunc(func(params AddPlanParams) middleware.Responder {
 			return middleware.NotImplemented("operation AddPlan has not yet been implemented")
 		}),
-		DeleteEventHandler: DeleteEventHandlerFunc(func(params DeleteEventParams) middleware.Responder {
-			return middleware.NotImplemented("operation DeleteEvent has not yet been implemented")
+		DeletePlanHandler: DeletePlanHandlerFunc(func(params DeletePlanParams) middleware.Responder {
+			return middleware.NotImplemented("operation DeletePlan has not yet been implemented")
 		}),
 		GetPlanByIDHandler: GetPlanByIDHandlerFunc(func(params GetPlanByIDParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetPlanByID has not yet been implemented")
@@ -85,8 +85,8 @@ type MmplanAPI struct {
 
 	// AddPlanHandler sets the operation handler for the add plan operation
 	AddPlanHandler AddPlanHandler
-	// DeleteEventHandler sets the operation handler for the delete event operation
-	DeleteEventHandler DeleteEventHandler
+	// DeletePlanHandler sets the operation handler for the delete plan operation
+	DeletePlanHandler DeletePlanHandler
 	// GetPlanByIDHandler sets the operation handler for the get plan by Id operation
 	GetPlanByIDHandler GetPlanByIDHandler
 	// GetPlansHandler sets the operation handler for the get plans operation
@@ -160,8 +160,8 @@ func (o *MmplanAPI) Validate() error {
 		unregistered = append(unregistered, "AddPlanHandler")
 	}
 
-	if o.DeleteEventHandler == nil {
-		unregistered = append(unregistered, "DeleteEventHandler")
+	if o.DeletePlanHandler == nil {
+		unregistered = append(unregistered, "DeletePlanHandler")
 	}
 
 	if o.GetPlanByIDHandler == nil {
@@ -282,7 +282,7 @@ func (o *MmplanAPI) initHandlerCache() {
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
-	o.handlers["DELETE"]["/v1/plan/{id}"] = NewDeleteEvent(o.context, o.DeleteEventHandler)
+	o.handlers["DELETE"]["/v1/plan/{id}"] = NewDeletePlan(o.context, o.DeletePlanHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

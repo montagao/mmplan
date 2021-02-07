@@ -5,9 +5,13 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	loads "github.com/go-openapi/loads"
+	"github.com/go-openapi/runtime/middleware"
 	flags "github.com/jessevdk/go-flags"
+	"github.com/montagao/monplan/internal/store"
+	"github.com/montagao/monplan/models"
 	"github.com/montagao/monplan/restapi"
 	"github.com/montagao/monplan/restapi/operations"
 )
@@ -18,6 +22,10 @@ import (
 func main() {
 
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	planStore, err := store.New()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -47,6 +55,61 @@ func main() {
 		}
 		os.Exit(code)
 	}
+
+	api.AddPlanHandler = operations.AddPlanHandlerFunc(
+		func(params operations.AddPlanParams) middleware.Responder {
+			newPlan := &models.Plan{
+				ID:         params.Body.ID,
+				IsComplete: params.Body.IsComplete,
+				List1:      params.Body.List1,
+				List2:      params.Body.List2,
+				Name1:      params.Body.Name1,
+				Name2:      params.Body.Name2,
+				Timestamp:  time.Now().String(),
+			}
+			err := planStore.Put(newPlan)
+			if err != nil {
+				log.Printf("%v", err)
+			}
+			return operations.NewAddPlanCreated().WithPayload(newPlan)
+		})
+
+	api.GetPlansHandler = operations.GetPlansHandlerFunc(
+		func(params operations.GetPlansParams) middleware.Responder {
+			plans, err := planStore.GetAll(int(*params.Limit))
+			if err != nil {
+				log.Printf("%v", err)
+			}
+			return operations.NewGetPlansOK().WithPayload(plans)
+		})
+
+	api.GetPlanByIDHandler = operations.GetPlanByIDHandlerFunc(
+		func(params operations.GetPlanByIDParams) middleware.Responder {
+			plan, err := planStore.GetByID(params.ID)
+			if err != nil {
+				log.Printf("%v", err)
+			}
+
+			if plan != nil {
+				return operations.NewGetPlanByIDOK().WithPayload(plan)
+			} else {
+				return operations.NewGetPlanByIDDefault(404)
+			}
+		})
+
+	api.DeletePlanHandler = operations.DeletePlanHandlerFunc(
+		func(params operations.DeletePlanParams) middleware.Responder {
+			err := planStore.Delete(params.ID)
+			if err != nil {
+				log.Printf("%v", err)
+			}
+
+			if err != nil {
+				return operations.NewGetPlanByIDOK().WithPayload(nil)
+			} else {
+				return operations.NewGetPlanByIDDefault(404)
+			}
+		})
 
 	server.ConfigureAPI()
 
