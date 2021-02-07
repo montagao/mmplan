@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	INSTANCE_CONNECTION_NAME = "35.196.103.90"
-	DATABASE_NAME            = "gs"
+	INSTANCE_CONNECTION_NAME = "10.96.32.3"
+	DATABASE_NAME            = "plans"
 	DATABASE_USER            = "postgres"
-	PASSWORD                 = "fydp"
+	PASSWORD                 = "montamonta"
 )
 
 type PlanStore struct {
