@@ -8,7 +8,7 @@ package operations
 import (
 	"net/http"
 
-	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/runtime/middleware"
 )
 
 // DeletePlanHandlerFunc turns a function with the right signature into a delete plan handler
@@ -29,7 +29,7 @@ func NewDeletePlan(ctx *middleware.Context, handler DeletePlanHandler) *DeletePl
 	return &DeletePlan{Context: ctx, Handler: handler}
 }
 
-/*DeletePlan swagger:route DELETE /v1/plan/{id} deletePlan
+/* DeletePlan swagger:route DELETE /v1/plan/{id} deletePlan
 
 DeletePlan delete plan API
 
@@ -45,14 +45,12 @@ func (o *DeletePlan) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		r = rCtx
 	}
 	var Params = NewDeletePlanParams()
-
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
 	res := o.Handler.Handle(Params) // actually handle the request
-
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

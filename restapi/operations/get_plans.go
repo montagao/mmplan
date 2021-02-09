@@ -8,7 +8,7 @@ package operations
 import (
 	"net/http"
 
-	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/runtime/middleware"
 )
 
 // GetPlansHandlerFunc turns a function with the right signature into a get plans handler
@@ -29,7 +29,7 @@ func NewGetPlans(ctx *middleware.Context, handler GetPlansHandler) *GetPlans {
 	return &GetPlans{Context: ctx, Handler: handler}
 }
 
-/*GetPlans swagger:route GET /v1/plan/ getPlans
+/* GetPlans swagger:route GET /v1/plan/ getPlans
 
 GetPlans get plans API
 
@@ -45,14 +45,12 @@ func (o *GetPlans) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		r = rCtx
 	}
 	var Params = NewGetPlansParams()
-
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
 	res := o.Handler.Handle(Params) // actually handle the request
-
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

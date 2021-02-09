@@ -11,9 +11,8 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-
-	strfmt "github.com/go-openapi/strfmt"
 )
 
 // NewGetPlansParams creates a new GetPlansParams object
@@ -62,7 +61,6 @@ func (o *GetPlansParams) BindRequest(r *http.Request, route *middleware.MatchedR
 	if err := o.bindLimit(qLimit, qhkLimit, route.Formats); err != nil {
 		res = append(res, err)
 	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -78,6 +76,7 @@ func (o *GetPlansParams) bindLimit(rawData []string, hasKey bool, formats strfmt
 
 	// Required: false
 	// AllowEmptyValue: false
+
 	if raw == "" { // empty values pass all other validations
 		// Default values have been previously initialized by NewGetPlansParams()
 		return nil

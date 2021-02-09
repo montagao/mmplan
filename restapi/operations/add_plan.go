@@ -8,7 +8,7 @@ package operations
 import (
 	"net/http"
 
-	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/runtime/middleware"
 )
 
 // AddPlanHandlerFunc turns a function with the right signature into a add plan handler
@@ -29,7 +29,7 @@ func NewAddPlan(ctx *middleware.Context, handler AddPlanHandler) *AddPlan {
 	return &AddPlan{Context: ctx, Handler: handler}
 }
 
-/*AddPlan swagger:route POST /v1/plan/ addPlan
+/* AddPlan swagger:route POST /v1/plan/ addPlan
 
 AddPlan add plan API
 
@@ -45,14 +45,12 @@ func (o *AddPlan) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		r = rCtx
 	}
 	var Params = NewAddPlanParams()
-
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
 	res := o.Handler.Handle(Params) // actually handle the request
-
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

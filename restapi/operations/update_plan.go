@@ -8,7 +8,7 @@ package operations
 import (
 	"net/http"
 
-	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/runtime/middleware"
 )
 
 // UpdatePlanHandlerFunc turns a function with the right signature into a update plan handler
@@ -29,7 +29,7 @@ func NewUpdatePlan(ctx *middleware.Context, handler UpdatePlanHandler) *UpdatePl
 	return &UpdatePlan{Context: ctx, Handler: handler}
 }
 
-/*UpdatePlan swagger:route PUT /v1/plan/{id} updatePlan
+/* UpdatePlan swagger:route PUT /v1/plan/{id} updatePlan
 
 UpdatePlan update plan API
 
@@ -45,14 +45,12 @@ func (o *UpdatePlan) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		r = rCtx
 	}
 	var Params = NewUpdatePlanParams()
-
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
 	res := o.Handler.Handle(Params) // actually handle the request
-
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

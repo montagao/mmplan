@@ -10,13 +10,13 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-
-	strfmt "github.com/go-openapi/strfmt"
 )
 
 // NewDeletePlanParams creates a new DeletePlanParams object
-// no default values defined in spec.
+//
+// There are no default values defined in the spec.
 func NewDeletePlanParams() DeletePlanParams {
 
 	return DeletePlanParams{}
@@ -51,7 +51,6 @@ func (o *DeletePlanParams) BindRequest(r *http.Request, route *middleware.Matche
 	if err := o.bindID(rID, rhkID, route.Formats); err != nil {
 		res = append(res, err)
 	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}

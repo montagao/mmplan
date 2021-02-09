@@ -38,9 +38,9 @@ func configureAPI(api *operations.MmplanAPI) http.Handler {
 			return middleware.NotImplemented("operation .AddPlan has not yet been implemented")
 		})
 	}
-	if api.DeleteEventHandler == nil {
-		api.DeleteEventHandler = operations.DeleteEventHandlerFunc(func(params operations.DeleteEventParams) middleware.Responder {
-			return middleware.NotImplemented("operation .DeleteEvent has not yet been implemented")
+	if api.DeletePlanHandler == nil {
+		api.DeletePlanHandler = operations.DeletePlanHandlerFunc(func(params operations.DeletePlanParams) middleware.Responder {
+			return middleware.NotImplemented("operation .DeletePlan has not yet been implemented")
 		})
 	}
 	if api.GetPlanByIDHandler == nil {

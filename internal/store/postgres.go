@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	_ "github.com/lib/pq" // here
 	"github.com/montagao/monplan/models"
 )
 

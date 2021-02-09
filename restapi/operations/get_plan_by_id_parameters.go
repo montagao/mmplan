@@ -10,13 +10,13 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-
-	strfmt "github.com/go-openapi/strfmt"
 )
 
 // NewGetPlanByIDParams creates a new GetPlanByIDParams object
-// no default values defined in spec.
+//
+// There are no default values defined in the spec.
 func NewGetPlanByIDParams() GetPlanByIDParams {
 
 	return GetPlanByIDParams{}
@@ -51,7 +51,6 @@ func (o *GetPlanByIDParams) BindRequest(r *http.Request, route *middleware.Match
 	if err := o.bindID(rID, rhkID, route.Formats); err != nil {
 		res = append(res, err)
 	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}

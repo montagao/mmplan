@@ -11,6 +11,7 @@ require (
 	github.com/go-openapi/swag v0.19.13
 	github.com/go-openapi/validate v0.20.1
 	github.com/jessevdk/go-flags v1.4.0
+	github.com/lib/pq v1.9.0
 	github.com/mailru/easyjson v0.7.7 // indirect
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777
 )

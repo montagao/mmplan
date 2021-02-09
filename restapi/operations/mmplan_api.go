@@ -10,13 +10,13 @@ import (
 	"net/http"
 	"strings"
 
-	errors "github.com/go-openapi/errors"
-	loads "github.com/go-openapi/loads"
-	runtime "github.com/go-openapi/runtime"
-	middleware "github.com/go-openapi/runtime/middleware"
-	security "github.com/go-openapi/runtime/security"
-	spec "github.com/go-openapi/spec"
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/errors"
+	"github.com/go-openapi/loads"
+	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/runtime/security"
+	"github.com/go-openapi/spec"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
@@ -29,14 +29,19 @@ func NewMmplanAPI(spec *loads.Document) *MmplanAPI {
 		defaultProduces:     "application/json",
 		customConsumers:     make(map[string]runtime.Consumer),
 		customProducers:     make(map[string]runtime.Producer),
+		PreServerShutdown:   func() {},
 		ServerShutdown:      func() {},
 		spec:                spec,
+		useSwaggerUI:        false,
 		ServeError:          errors.ServeError,
 		BasicAuthenticator:  security.BasicAuth,
 		APIKeyAuthenticator: security.APIKeyAuth,
 		BearerAuthenticator: security.BearerAuth,
-		JSONConsumer:        runtime.JSONConsumer(),
-		JSONProducer:        runtime.JSONProducer(),
+
+		JSONConsumer: runtime.JSONConsumer(),
+
+		JSONProducer: runtime.JSONProducer(),
+
 		AddPlanHandler: AddPlanHandlerFunc(func(params AddPlanParams) middleware.Responder {
 			return middleware.NotImplemented("operation AddPlan has not yet been implemented")
 		}),
@@ -66,21 +71,26 @@ type MmplanAPI struct {
 	defaultConsumes string
 	defaultProduces string
 	Middleware      func(middleware.Builder) http.Handler
+	useSwaggerUI    bool
 
 	// BasicAuthenticator generates a runtime.Authenticator from the supplied basic auth function.
 	// It has a default implementation in the security package, however you can replace it for your particular usage.
 	BasicAuthenticator func(security.UserPassAuthentication) runtime.Authenticator
+
 	// APIKeyAuthenticator generates a runtime.Authenticator from the supplied token auth function.
 	// It has a default implementation in the security package, however you can replace it for your particular usage.
 	APIKeyAuthenticator func(string, string, security.TokenAuthentication) runtime.Authenticator
+
 	// BearerAuthenticator generates a runtime.Authenticator from the supplied bearer token auth function.
 	// It has a default implementation in the security package, however you can replace it for your particular usage.
 	BearerAuthenticator func(string, security.ScopedTokenAuthentication) runtime.Authenticator
 
-	// JSONConsumer registers a consumer for a "application/json" mime type
+	// JSONConsumer registers a consumer for the following mime types:
+	//   - application/json
 	JSONConsumer runtime.Consumer
 
-	// JSONProducer registers a producer for a "application/json" mime type
+	// JSONProducer registers a producer for the following mime types:
+	//   - application/json
 	JSONProducer runtime.Producer
 
 	// AddPlanHandler sets the operation handler for the add plan operation
@@ -98,6 +108,10 @@ type MmplanAPI struct {
 	// but you can set your own with this
 	ServeError func(http.ResponseWriter, *http.Request, error)
 
+	// PreServerShutdown is called before the HTTP(S) server is shutdown
+	// This allows for custom functions to get executed before the HTTP(S) server stops accepting traffic
+	PreServerShutdown func()
+
 	// ServerShutdown is called when the HTTP(S) server is shut down and done
 	// handling all active connections and does not accept connections any more
 	ServerShutdown func()
@@ -107,6 +121,16 @@ type MmplanAPI struct {
 
 	// User defined logger function.
 	Logger func(string, ...interface{})
+}
+
+// UseRedoc for documentation at /docs
+func (o *MmplanAPI) UseRedoc() {
+	o.useSwaggerUI = false
+}
+
+// UseSwaggerUI for documentation at /docs
+func (o *MmplanAPI) UseSwaggerUI() {
+	o.useSwaggerUI = true
 }
 
 // SetDefaultProduces sets the default produces media type
@@ -159,19 +183,15 @@ func (o *MmplanAPI) Validate() error {
 	if o.AddPlanHandler == nil {
 		unregistered = append(unregistered, "AddPlanHandler")
 	}
-
 	if o.DeletePlanHandler == nil {
 		unregistered = append(unregistered, "DeletePlanHandler")
 	}
-
 	if o.GetPlanByIDHandler == nil {
 		unregistered = append(unregistered, "GetPlanByIDHandler")
 	}
-
 	if o.GetPlansHandler == nil {
 		unregistered = append(unregistered, "GetPlansHandler")
 	}
-
 	if o.UpdatePlanHandler == nil {
 		unregistered = append(unregistered, "UpdatePlanHandler")
 	}
@@ -190,28 +210,22 @@ func (o *MmplanAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, 
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
 func (o *MmplanAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
-
 	return nil
-
 }
 
 // Authorizer returns the registered authorizer
 func (o *MmplanAPI) Authorizer() runtime.Authorizer {
-
 	return nil
-
 }
 
-// ConsumersFor gets the consumers for the specified media types
+// ConsumersFor gets the consumers for the specified media types.
+// MIME type parameters are ignored here.
 func (o *MmplanAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
-
-	result := make(map[string]runtime.Consumer)
+	result := make(map[string]runtime.Consumer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
-
 		case "application/json":
 			result["application/json"] = o.JSONConsumer
-
 		}
 
 		if c, ok := o.customConsumers[mt]; ok {
@@ -219,19 +233,16 @@ func (o *MmplanAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consume
 		}
 	}
 	return result
-
 }
 
-// ProducersFor gets the producers for the specified media types
+// ProducersFor gets the producers for the specified media types.
+// MIME type parameters are ignored here.
 func (o *MmplanAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
-
-	result := make(map[string]runtime.Producer)
+	result := make(map[string]runtime.Producer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
-
 		case "application/json":
 			result["application/json"] = o.JSONProducer
-
 		}
 
 		if p, ok := o.customProducers[mt]; ok {
@@ -239,7 +250,6 @@ func (o *MmplanAPI) ProducersFor(mediaTypes []string) map[string]runtime.Produce
 		}
 	}
 	return result
-
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
@@ -269,7 +279,6 @@ func (o *MmplanAPI) Context() *middleware.Context {
 
 func (o *MmplanAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
-
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
@@ -278,27 +287,22 @@ func (o *MmplanAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/v1/plan"] = NewAddPlan(o.context, o.AddPlanHandler)
-
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/v1/plan/{id}"] = NewDeletePlan(o.context, o.DeletePlanHandler)
-
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/v1/plan/{id}"] = NewGetPlanByID(o.context, o.GetPlanByIDHandler)
-
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/v1/plan"] = NewGetPlans(o.context, o.GetPlansHandler)
-
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/v1/plan/{id}"] = NewUpdatePlan(o.context, o.UpdatePlanHandler)
-
 }
 
 // Serve creates a http handler to serve the API over HTTP
@@ -308,6 +312,9 @@ func (o *MmplanAPI) Serve(builder middleware.Builder) http.Handler {
 
 	if o.Middleware != nil {
 		return o.Middleware(builder)
+	}
+	if o.useSwaggerUI {
+		return o.context.APIHandlerSwaggerUI(builder)
 	}
 	return o.context.APIHandler(builder)
 }
@@ -327,4 +334,16 @@ func (o *MmplanAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer
 // RegisterProducer allows you to add (or override) a producer for a media type.
 func (o *MmplanAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
+}
+
+// AddMiddlewareFor adds a http middleware to existing handler
+func (o *MmplanAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
+	um := strings.ToUpper(method)
+	if path == "/" {
+		path = ""
+	}
+	o.Init()
+	if h, ok := o.handlers[um][path]; ok {
+		o.handlers[method][path] = builder(h)
+	}
 }

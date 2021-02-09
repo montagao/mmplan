@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	models "github.com/montagao/monplan/models"
+	"github.com/montagao/monplan/models"
 )
 
 // UpdatePlanOKCode is the HTTP code returned for type UpdatePlanOK

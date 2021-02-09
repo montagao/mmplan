@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	models "github.com/montagao/monplan/models"
+	"github.com/montagao/monplan/models"
 )
 
 // DeletePlanNoContentCode is the HTTP code returned for type DeletePlanNoContent

@@ -6,14 +6,16 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	strfmt "github.com/go-openapi/strfmt"
+	"context"
 
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
 // Plan plan
+//
 // swagger:model plan
 type Plan struct {
 
@@ -99,12 +101,11 @@ func (m *Plan) validateIsComplete(formats strfmt.Registry) error {
 }
 
 func (m *Plan) validateList1(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.List1) { // not required
 		return nil
 	}
 
-	if err := validate.MinLength("list1", "body", string(m.List1), 1); err != nil {
+	if err := validate.MinLength("list1", "body", m.List1, 1); err != nil {
 		return err
 	}
 
@@ -112,12 +113,11 @@ func (m *Plan) validateList1(formats strfmt.Registry) error {
 }
 
 func (m *Plan) validateList2(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.List2) { // not required
 		return nil
 	}
 
-	if err := validate.MinLength("list2", "body", string(m.List2), 1); err != nil {
+	if err := validate.MinLength("list2", "body", m.List2, 1); err != nil {
 		return err
 	}
 
@@ -125,12 +125,11 @@ func (m *Plan) validateList2(formats strfmt.Registry) error {
 }
 
 func (m *Plan) validateName1(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Name1) { // not required
 		return nil
 	}
 
-	if err := validate.MinLength("name1", "body", string(m.Name1), 1); err != nil {
+	if err := validate.MinLength("name1", "body", m.Name1, 1); err != nil {
 		return err
 	}
 
@@ -138,12 +137,34 @@ func (m *Plan) validateName1(formats strfmt.Registry) error {
 }
 
 func (m *Plan) validateName2(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Name2) { // not required
 		return nil
 	}
 
-	if err := validate.MinLength("name2", "body", string(m.Name2), 1); err != nil {
+	if err := validate.MinLength("name2", "body", m.Name2, 1); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this plan based on the context it is used
+func (m *Plan) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateID(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Plan) contextValidateID(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "id", "body", int64(m.ID)); err != nil {
 		return err
 	}
 
