@@ -86,6 +86,7 @@ paths:
             $ref: "#/definitions/error"
 produces:
 - application/json
+basePath: /api
 schemes:
 - http
 swagger: "2.0"

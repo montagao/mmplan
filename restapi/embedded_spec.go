@@ -33,6 +33,7 @@ func init() {
     "title": "MM Plan API",
     "version": "1.0.0"
   },
+  "basePath": "/api",
   "paths": {
     "/v1/plan/": {
       "get": {
@@ -230,6 +231,7 @@ func init() {
     "title": "MM Plan API",
     "version": "1.0.0"
   },
+  "basePath": "/api",
   "paths": {
     "/v1/plan/": {
       "get": {

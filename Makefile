@@ -5,6 +5,6 @@ run:
 api:
 	swagger generate server -A ${PROJECT_NAME} -f ./api.yml --exclude-main
 install:
-	go install ./cmd/${PROJECT_NAME}-server/main.go 
+	go install ./cmd/${PROJECT_NAME}-server/main.go
 clean:
 	rm -rf cmd/* models/* restapi/*
