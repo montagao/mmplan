@@ -13,5 +13,7 @@ require (
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/lib/pq v1.9.0
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/stretchr/objx v0.2.0 // indirect
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777
+	golang.org/x/tools v0.0.0-20190617190820-da514acc4774 // indirect
 )

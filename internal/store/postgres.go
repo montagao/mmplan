@@ -11,7 +11,7 @@ import (
 
 const (
 	INSTANCE_CONNECTION_NAME = "10.96.32.3"
-	DATABASE_NAME            = "plans"
+	DATABASE_NAME            = "plan"
 	DATABASE_USER            = "postgres"
 	PASSWORD                 = "montamonta"
 )
