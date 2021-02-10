@@ -607,6 +607,7 @@ func (c *Context) APIHandler(builder Builder) http.Handler {
 	redocOpts := RedocOpts{
 		BasePath: c.BasePath(),
 		Title:    title,
+		SpecURL:  "/api/swagger.json",
 	}
 
 	return Spec("", c.spec.Raw(), Redoc(redocOpts, c.RoutesHandler(b)))

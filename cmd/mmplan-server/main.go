@@ -35,6 +35,9 @@ func main() {
 	}
 
 	api := operations.NewMmplanAPI(swaggerSpec)
+	// ReDoc is default
+	// api.UseSwaggerUI()
+
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
 
