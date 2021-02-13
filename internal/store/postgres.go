@@ -51,11 +51,11 @@ func (s *PlanStore) GetByID(id int64) (*models.Plan, error) {
 	var (
 		nullID     int
 		isComplete bool
-		list1      string
-		list2      string
-		name1      string
-		name2      string
-		timestamp  string
+		list1      sql.NullString
+		list2      sql.NullString
+		name1      sql.NullString
+		name2      sql.NullString
+		timestamp  sql.NullString
 	)
 	err = rows.Scan(&nullID, &isComplete, &list1, &list2, &name1, &name2, &timestamp)
 	if err != nil {
@@ -64,11 +64,11 @@ func (s *PlanStore) GetByID(id int64) (*models.Plan, error) {
 	e := &models.Plan{
 		ID:         &id,
 		IsComplete: &isComplete,
-		List1:      list1,
-		List2:      list2,
-		Name1:      name1,
-		Name2:      name2,
-		Timestamp:  timestamp,
+		List1:      list1.String,
+		List2:      list2.String,
+		Name1:      name1.String,
+		Name2:      name2.String,
+		Timestamp:  timestamp.String,
 	}
 	return e, nil
 }
