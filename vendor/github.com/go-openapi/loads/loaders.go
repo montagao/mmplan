@@ -81,7 +81,7 @@ func (l *loader) WithNext(next *loader) *loader {
 
 // Load the raw document from path
 func (l *loader) Load(path string) (json.RawMessage, error) {
-	_, erp := url.Parse("/api/" + path)
+	_, erp := url.Parse(path)
 	if erp != nil {
 		return nil, erp
 	}

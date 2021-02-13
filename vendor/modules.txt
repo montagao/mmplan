@@ -60,8 +60,9 @@ github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
 # github.com/mitchellh/mapstructure v1.4.1
 github.com/mitchellh/mapstructure
-# github.com/stretchr/objx v0.2.0
+# github.com/rs/cors v1.7.0
 ## explicit
+github.com/rs/cors
 # go.mongodb.org/mongo-driver v1.4.6
 go.mongodb.org/mongo-driver/bson
 go.mongodb.org/mongo-driver/bson/bsoncodec
@@ -80,7 +81,5 @@ golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
-# golang.org/x/tools v0.0.0-20190617190820-da514acc4774
-## explicit
 # gopkg.in/yaml.v2 v2.4.0
 gopkg.in/yaml.v2

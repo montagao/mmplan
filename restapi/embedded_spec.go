@@ -186,8 +186,7 @@ func init() {
       "properties": {
         "id": {
           "type": "integer",
-          "format": "int64",
-          "readOnly": true
+          "format": "int64"
         },
         "isComplete": {
           "type": "boolean"
@@ -384,8 +383,7 @@ func init() {
       "properties": {
         "id": {
           "type": "integer",
-          "format": "int64",
-          "readOnly": true
+          "format": "int64"
         },
         "isComplete": {
           "type": "boolean"

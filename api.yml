@@ -110,7 +110,6 @@ definitions:
       id:
         type: integer
         format: int64
-        readOnly: true
       name1:
         type: string
         minLength: 1

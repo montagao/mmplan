@@ -61,7 +61,7 @@ func (s *PlanStore) GetByID(id int64) (*models.Plan, error) {
 		return nil, err
 	}
 	e := &models.Plan{
-		ID:         id,
+		ID:         &id,
 		IsComplete: &isComplete,
 		List1:      list1,
 		List2:      list2,
@@ -95,7 +95,7 @@ func (s *PlanStore) GetAll(limit int) ([]*models.Plan, error) {
 			return nil, err
 		}
 		e := &models.Plan{
-			ID:         id,
+			ID:         &id,
 			IsComplete: &isComplete,
 			List1:      list1,
 			List2:      list1,
@@ -111,6 +111,7 @@ func (s *PlanStore) GetAll(limit int) ([]*models.Plan, error) {
 
 func (s *PlanStore) Put(plan *models.Plan) error {
 	var err error
+	fmt.Printf("adding new plan with id: %d", *plan.ID)
 	// first insertion, insert person 1 info
 	if len(plan.List1) != 0 {
 		err = s.updateList1(plan)
@@ -143,25 +144,25 @@ func (s *PlanStore) Delete(id int64) error {
 }
 
 func (s *PlanStore) updateList1(plan *models.Plan) error {
-	stmt, err := s.db.Prepare("INSERT INTO plans(list1, name1, timestamp, iscomplete) VALUES( $1, $2, $3, $4 );")
+	stmt, err := s.db.Prepare("INSERT INTO plans(list1, name1, timestamp, iscomplete) VALUES( $1, $2, $3, $4 ) WHERE ID = $5;")
 	// Prepared statements take up server resources and should be closed after use.
 	defer stmt.Close()
 
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(plan.List1, plan.Name1, plan.Timestamp, plan.IsComplete)
+	_, err = stmt.Exec(plan.List1, plan.Name1, plan.Timestamp, plan.IsComplete, plan.ID)
 	return err
 }
 
 func (s *PlanStore) updateList2(plan *models.Plan) error {
-	stmt, err := s.db.Prepare("INSERT INTO plans(list2, name2, timestamp, iscomplete) VALUES( $1, $2, $3, $4 );")
+	stmt, err := s.db.Prepare("INSERT INTO plans(list2, name2, timestamp, iscomplete) VALUES( $1, $2, $3, $4 ) WHERE ID = $5;")
 	// Prepared statements take up server resources and should be closed after use.
 	defer stmt.Close()
 
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(plan.List2, plan.Name2, plan.Timestamp, plan.IsComplete)
+	_, err = stmt.Exec(plan.List2, plan.Name2, plan.Timestamp, plan.IsComplete, plan.ID)
 	return err
 }

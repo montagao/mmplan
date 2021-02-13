@@ -21,8 +21,7 @@ type Plan struct {
 
 	// id
 	// Required: true
-	// Read Only: true
-	ID int64 `json:"id"`
+	ID *int64 `json:"id"`
 
 	// is complete
 	// Required: true
@@ -84,7 +83,7 @@ func (m *Plan) Validate(formats strfmt.Registry) error {
 
 func (m *Plan) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", int64(m.ID)); err != nil {
+	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
 	}
 
@@ -148,26 +147,8 @@ func (m *Plan) validateName2(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this plan based on the context it is used
+// ContextValidate validates this plan based on context it is used
 func (m *Plan) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.contextValidateID(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *Plan) contextValidateID(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := validate.ReadOnly(ctx, "id", "body", int64(m.ID)); err != nil {
-		return err
-	}
-
 	return nil
 }
 
