@@ -146,7 +146,7 @@ func (s *PlanStore) Delete(id int64) error {
 func (s *PlanStore) updateList1(plan *models.Plan) error {
 	stmt, err := s.db.Prepare("INSERT INTO plans(list1, name1, timestamp, iscomplete) VALUES( $1, $2, $3, $4 ) WHERE ID = $5;")
 	// Prepared statements take up server resources and should be closed after use.
-	defer stmt.Close()
+	// defer stmt.Close()
 	fmt.Printf("got plan %v", plan)
 
 	if err != nil {
