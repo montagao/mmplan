@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"time"
 
 	_ "github.com/lib/pq" // here
 	"github.com/montagao/monplan/models"
@@ -153,12 +152,12 @@ func (s *PlanStore) updateList1(plan *models.Plan) error {
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(plan.ID, plan.List1, plan.Name1, time.Now().String(), plan.IsComplete)
+	_, err = stmt.Exec(plan.ID, plan.List1, plan.Name1, plan.Timestamp, plan.IsComplete)
 	return err
 }
 
 func (s *PlanStore) updateList2(plan *models.Plan) error {
-	stmt, err := s.db.Prepare("INSERT INTO plans(list2, name2, timestamp, is_complete) VALUES( $1, $2, $3, $4 ) ON CONFLICT  DO UPDATE;")
+	stmt, err := s.db.Prepare("UPDATE plans SET list2 = $1, name2 = $2, timestamp = $3, is_complete = $4) VALUES( $1, $2, $3, $4 ) WHERE id = $5;")
 	// Prepared statements take up server resources and should be closed after use.
 	defer stmt.Close()
 
