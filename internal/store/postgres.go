@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	_ "github.com/lib/pq" // here
 	"github.com/montagao/monplan/models"
@@ -152,7 +153,7 @@ func (s *PlanStore) updateList1(plan *models.Plan) error {
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(plan.ID, plan.List1, plan.Name1, plan.Timestamp, plan.IsComplete)
+	_, err = stmt.Exec(plan.ID, plan.List1, plan.Name1, time.Now().String(), plan.IsComplete)
 	return err
 }
 
