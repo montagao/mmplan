@@ -157,7 +157,7 @@ func (s *PlanStore) updateList1(plan *models.Plan) error {
 }
 
 func (s *PlanStore) updateList2(plan *models.Plan) error {
-	stmt, err := s.db.Prepare("UPDATE plans SET list2 = $1, name2 = $2, timestamp = $3, is_complete = $4 VALUES( $1, $2, $3, $4 ) WHERE id = $5;")
+	stmt, err := s.db.Prepare("UPDATE plans SET list2 = $1, name2 = $2, timestamp = $3, is_complete = $4  WHERE id = $5;")
 	// Prepared statements take up server resources and should be closed after use.
 	if err != nil {
 		return err
