@@ -144,7 +144,7 @@ func (s *PlanStore) Delete(id int64) error {
 }
 
 func (s *PlanStore) updateList1(plan *models.Plan) error {
-	stmt, err := s.db.Prepare("INSERT INTO plans(list1, name1, timestamp, iscomplete) VALUES( $1, $2, $3, $4 ) ON CONFLICT  DO UPDATE;")
+	stmt, err := s.db.Prepare("INSERT INTO plans(id, list1, name1, timestamp, iscomplete) VALUES( $1, $2, $3, $4, $5 );")
 	// Prepared statements take up server resources and should be closed after use.
 	// defer stmt.Close()
 	fmt.Printf("got plan %v", plan)
@@ -152,7 +152,7 @@ func (s *PlanStore) updateList1(plan *models.Plan) error {
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(plan.List1, plan.Name1, plan.Timestamp, plan.IsComplete, plan.ID)
+	_, err = stmt.Exec(plan.ID, plan.List1, plan.Name1, plan.Timestamp, plan.IsComplete)
 	return err
 }
 
