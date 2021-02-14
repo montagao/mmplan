@@ -43,6 +43,10 @@ type Plan struct {
 	// Min Length: 1
 	Name2 string `json:"name2,omitempty"`
 
+	// plan name
+	// Min Length: 1
+	PlanName string `json:"planName,omitempty"`
+
 	// timestamp
 	Timestamp string `json:"timestamp,omitempty"`
 }
@@ -72,6 +76,10 @@ func (m *Plan) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateName2(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePlanName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -141,6 +149,18 @@ func (m *Plan) validateName2(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinLength("name2", "body", m.Name2, 1); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Plan) validatePlanName(formats strfmt.Registry) error {
+	if swag.IsZero(m.PlanName) { // not required
+		return nil
+	}
+
+	if err := validate.MinLength("planName", "body", m.PlanName, 1); err != nil {
 		return err
 	}
 

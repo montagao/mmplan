@@ -73,6 +73,7 @@ func main() {
 				Name1:      params.Body.Name1,
 				Name2:      params.Body.Name2,
 				Timestamp:  time.Now().String(),
+				PlanName:   params.Body.PlanName,
 			}
 			err := planStore.Put(newPlan)
 			if err != nil {

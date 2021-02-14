@@ -110,6 +110,9 @@ definitions:
       id:
         type: integer
         format: int64
+      planName:
+        type: string
+        minLength: 1
       name1:
         type: string
         minLength: 1

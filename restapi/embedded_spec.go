@@ -207,6 +207,10 @@ func init() {
           "type": "string",
           "minLength": 1
         },
+        "planName": {
+          "type": "string",
+          "minLength": 1
+        },
         "timestamp": {
           "type": "string"
         }
@@ -401,6 +405,10 @@ func init() {
           "minLength": 1
         },
         "name2": {
+          "type": "string",
+          "minLength": 1
+        },
+        "planName": {
           "type": "string",
           "minLength": 1
         },
