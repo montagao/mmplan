@@ -117,7 +117,7 @@ func (s *PlanStore) Put(plan *models.Plan) error {
 	var err error
 	fmt.Printf("adding new plan with id: %d", *plan.ID)
 	// first insertion, insert person 1 info
-	if len(plan.List1) != 0 {
+	if len(plan.List2) == 0 {
 		err = s.updateList1(plan)
 	} else {
 		err = s.updateList2(plan)
