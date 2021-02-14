@@ -41,6 +41,7 @@ func New() (*PlanStore, error) {
 
 func (s *PlanStore) GetByID(id int64) (*models.Plan, error) {
 	rows, err := s.db.Query("select * from plans where id = $1;", id)
+	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -78,6 +79,7 @@ func (s *PlanStore) GetAll(limit int) ([]*models.Plan, error) {
 	log.Printf("Getting all plans, limit: %d\n", limit)
 	result := []*models.Plan{}
 	rows, err := s.db.Query("select * from plans LIMIT $1 ", limit)
+	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -147,6 +149,7 @@ func (s *PlanStore) Delete(id int64) error {
 
 func (s *PlanStore) updateList1(plan *models.Plan) error {
 	stmt, err := s.db.Prepare("INSERT INTO plans(id, list1, name1, timestamp, is_complete, planName) VALUES( $1, $2, $3, $4, $5, $6 );")
+	defer stmt.Close()
 	// Prepared statements take up server resources and should be closed after use.
 	fmt.Printf("got plan %v", plan)
 
@@ -159,6 +162,7 @@ func (s *PlanStore) updateList1(plan *models.Plan) error {
 
 func (s *PlanStore) updateList2(plan *models.Plan) error {
 	stmt, err := s.db.Prepare("UPDATE plans SET list2 = $1, name2 = $2, timestamp = $3, is_complete = $4  WHERE id = $5;")
+	defer stmt.Close()
 	// Prepared statements take up server resources and should be closed after use.
 	if err != nil {
 		return err
